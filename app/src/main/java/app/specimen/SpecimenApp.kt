@@ -15,6 +15,13 @@ import app.specimen.data.Shot
 import app.specimen.data.Specimen
 import app.specimen.data.StationDb
 import app.specimen.data.Trial
+import app.specimen.data.Tomb
+import app.specimen.sync.HomeNet
+import app.specimen.sync.Invite
+import app.specimen.sync.LanFinder
+import app.specimen.sync.Link
+import app.specimen.sync.LinkService
+import app.specimen.sync.Seal
 import app.specimen.data.now
 import app.specimen.domain.Catalog
 import app.specimen.domain.Lab
@@ -38,6 +45,36 @@ class AppContainer(context: Context) {
     /** On the main thread: Room and DataStore are main-safe. */
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
+    /** Which local network this phone is on, and the link to the paired phone over it. */
+    val homeNet = HomeNet(app)
+    val link = Link(settings, dao, photos, scope, LanFinder(app)).also { l ->
+        // Wherever the two phones meet is home: the background link listens there.
+        l.onMet = { homeNet.here.value?.let { net -> scope.launch { settings.update { it.copy(homes = (it.homes - net + net).takeLast(4)) } } } }
+    }
+
+    /** This phone shows a QR: a fresh secret, waiting for whoever scans it. */
+    suspend fun offer(): Invite {
+        val secret = Seal.newSecret()
+        settings.update { it.copy(secret = android.util.Base64.encodeToString(secret, android.util.Base64.NO_WRAP), partnerId = "", partnerName = "") }
+        link.refresh()
+        return Invite(secret, settings.deviceId(), settings.now().researcher)
+    }
+
+    /** Scanned the other phone's QR: paired at once. */
+    suspend fun pair(i: Invite) {
+        settings.update { it.copy(secret = android.util.Base64.encodeToString(i.secret, android.util.Base64.NO_WRAP), partnerId = i.deviceId, partnerName = i.name) }
+        link.refresh()
+    }
+
+    suspend fun unpair() {
+        settings.update { it.copy(secret = "", partnerId = "", partnerName = "", hum = false, homes = emptyList(), met = 0) }
+        LinkService.sync(app, false)
+        link.refresh()
+    }
+
+    /** Deleted rows leave a tombstone, so the paired phone deletes them too. */
+    private suspend fun bury(vararg uids: String) = dao.bury(uids.map { Tomb(it) })
+
     /** True while the demo build fills its station, so the first screen doesn't jump. */
     val seeding = MutableStateFlow(BuildConfig.DEMO)
 
@@ -60,12 +97,28 @@ class AppContainer(context: Context) {
 
     suspend fun save(sp: Specimen) = dao.save(sp.copy(updated = now()))
 
+    /** A chosen photo becomes the specimen's portrait: kept apart from the field shots, under its negative id. */
+    suspend fun setAvatar(id: Long, uri: Uri): Boolean {
+        val bmp = photos.read(uri) ?: return false
+        photos.keep(-id, bmp)
+        dao.specimen(id)?.let { save(it.copy(portrait = -id)) }
+        return true
+    }
+
+    /** Back to the latest field shot, or to the engraved portrait of the kind. */
+    suspend fun dropAvatar(id: Long) {
+        photos.delete(-id)
+        dao.specimen(id)?.let { sp -> save(sp.copy(portrait = dao.shotsNow().firstOrNull { it.specimen == id }?.id ?: 0)) }
+    }
+
     suspend fun endMission(sp: Specimen, note: String) = save(sp.copy(gone = today(), goneNote = note.trim()))
 
     suspend fun resume(sp: Specimen) = save(sp.copy(gone = 0, goneNote = ""))
 
     suspend fun delete(sp: Specimen) {
         dao.shotsNow().filter { it.specimen == sp.id }.forEach { dao.drop(it); photos.delete(it.id) }
+        photos.delete(-sp.id)
+        bury(sp.uid)
         dao.dropObs(sp.id); dao.dropTrials(sp.id); dao.dropDone(sp.id); dao.dropProtocols(sp.id)
         dao.drop(sp)
     }
@@ -74,7 +127,7 @@ class AppContainer(context: Context) {
 
     suspend fun log(o: Obs): Long = dao.add(o.copy(at = if (o.at == 0) minute() else o.at))
 
-    suspend fun drop(o: Obs) = dao.drop(o)
+    suspend fun drop(o: Obs) { bury(o.uid); dao.drop(o) }
 
     // ── field shots ──
 
@@ -90,6 +143,7 @@ class AppContainer(context: Context) {
     suspend fun save(s: Shot) = dao.save(s.copy(updated = now()))
 
     suspend fun drop(s: Shot) {
+        bury(s.uid)
         dao.drop(s)
         photos.delete(s.id)
         dao.specimensNow().filter { it.portrait == s.id }.forEach { sp ->
@@ -106,7 +160,7 @@ class AppContainer(context: Context) {
 
     suspend fun save(t: Trial) = dao.save(t.copy(updated = now()))
 
-    suspend fun drop(t: Trial) = dao.drop(t)
+    suspend fun drop(t: Trial) { bury(t.uid); dao.drop(t) }
 
     // ── life support ──
 
@@ -121,11 +175,12 @@ class AppContainer(context: Context) {
     suspend fun save(p: Protocol) = dao.save(p.copy(updated = now()))
 
     suspend fun drop(p: Protocol) {
+        bury(p.uid, *dao.doneNow().filter { it.protocol == p.id }.map { it.uid }.toTypedArray())
         dao.dropDoneOf(p.id)
         dao.drop(p)
     }
 
-    suspend fun drop(d: Done) = dao.drop(d)
+    suspend fun drop(d: Done) { bury(d.uid); dao.drop(d) }
 }
 
 class SpecimenApp : Application() {

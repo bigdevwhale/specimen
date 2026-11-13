@@ -1,5 +1,6 @@
 package app.specimen.ui.dossier
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.graphics.Color
 import app.specimen.ui.components.PILL
@@ -97,7 +98,7 @@ fun DossierPage(id: Long, lab: Lab, nav: Nav) {
             IconBtn(Icons.Outlined.Edit, { nav.open(Overlay.SpecimenEdit(sp.id)) }, desc = stringResource(R.string.edit))
         }
         Row(Modifier.padding(horizontal = 18.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Portrait(sp, 84.dp)
+            Box(Modifier.clip(CircleShape).clickable { nav.open(Overlay.SpecimenEdit(sp.id)) }) { Portrait(sp, 84.dp) }
             Column(Modifier.padding(start = 14.dp).weight(1f)) {
                 Text(tx(breed.name), style = T.Heading)
                 Text(listOfNotNull(Words.planet(ctx, planet), if (sp.born > 0) Words.age(ctx, sp.born, lab.day) else null).joinToString(" · "), style = T.Small)

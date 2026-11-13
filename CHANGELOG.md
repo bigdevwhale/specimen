@@ -6,6 +6,19 @@ line "<!-- tg", then 2-4 short lines in Russian for users (what is new, what is 
 then close it like any HTML comment. The release notes carry it, and the chat bot posts those lines.
 -->
 
+## [1.1.0] - 2026-11-13
+
+- A second phone: pair two phones with a QR (Settings → Second phone) and keep one diary for the whole family. They find each other on the home Wi-Fi and swap entries, photos and portraits directly, encrypted, with no server; optionally in the background at home.
+- A portrait for each pet: tap the porthole in the pet's form to take a photo or pick one from the gallery.
+- Pets without a photo get an engraved portrait of their kind; appetite is chosen from engraved scenes for every kind.
+- A «+» next to the pet's name at the top of the station registers another pet.
+
+<!-- tg
+Теперь дневник можно вести вдвоём: подключите второй телефон по QR в настройках, и записи и фото будут приходить на него сами, пока оба телефона в домашней Wi-Fi.
+Теперь у питомца может быть своя аватарка: нажмите на портрет в досье и выберите фото.
+Чтобы добавить ещё одного питомца, нажмите «+» рядом с его именем вверху станции.
+-->
+
 ## [1.0.0] - 2026-11-13
 
 The first release of Specimen.

@@ -158,6 +158,13 @@ data class Shot(
     val tagList get() = tags.split(',').filter { it.isNotBlank() }
 }
 
+/** A row deleted on this phone, kept so the paired phone deletes it too instead of sending it back. */
+@Entity
+data class Tomb(
+    @PrimaryKey val uid: String,
+    val at: Long = now(),
+)
+
 @Dao
 interface StationDao {
     @Query("SELECT * FROM Specimen ORDER BY num") fun specimens(): Flow<List<Specimen>>
@@ -208,14 +215,25 @@ interface StationDao {
     @Query("DELETE FROM Protocol WHERE specimen = :id") suspend fun dropProtocols(id: Long)
     @Query("DELETE FROM Done WHERE specimen = :id") suspend fun dropDone(id: Long)
     @Query("DELETE FROM Done WHERE protocol = :id") suspend fun dropDoneOf(id: Long)
+
+    @Query("SELECT * FROM Tomb") suspend fun tombsNow(): List<Tomb>
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE) suspend fun bury(t: Tomb)
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE) suspend fun bury(t: List<Tomb>)
 }
 
-@Database(entities = [Specimen::class, Obs::class, Trial::class, Protocol::class, Done::class, Shot::class], version = 1, exportSchema = true)
+@Database(entities = [Specimen::class, Obs::class, Trial::class, Protocol::class, Done::class, Shot::class, Tomb::class], version = 2, exportSchema = true)
 abstract class StationDb : RoomDatabase() {
     abstract fun dao(): StationDao
 
     companion object {
         fun create(context: Context): StationDb =
-            Room.databaseBuilder(context, StationDb::class.java, "station.db").build()
+            Room.databaseBuilder(context, StationDb::class.java, "station.db").addMigrations(M1_2).build()
+
+        /** 2: tombstones for syncing two phones. */
+        private val M1_2 = object : androidx.room.migration.Migration(1, 2) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS `Tomb` (`uid` TEXT NOT NULL, `at` INTEGER NOT NULL, PRIMARY KEY(`uid`))")
+            }
+        }
     }
 }

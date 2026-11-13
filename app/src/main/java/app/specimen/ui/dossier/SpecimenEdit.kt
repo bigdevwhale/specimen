@@ -1,5 +1,11 @@
 package app.specimen.ui.dossier
 
+import androidx.compose.material.icons.outlined.PhotoLibrary
+import androidx.compose.material.icons.outlined.PhotoCamera
+import androidx.compose.material.icons.outlined.AddAPhoto
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.graphics.asImageBitmap
 import app.specimen.ui.components.PlanetArt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -79,10 +85,36 @@ fun SpecimenEdit(id: Long, lab: Lab, nav: Nav) {
     var q by remember { mutableStateOf("") }
     var picking by remember { mutableStateOf(0) } // 1 born, 2 arrived
     var confirm by remember { mutableStateOf(false) }
+    var choosing by remember { mutableStateOf(false) }
+    var pending by remember { mutableStateOf<androidx.compose.ui.graphics.ImageBitmap?>(null) }
+    var pendingUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    var shotUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    // A new specimen keeps the photo until it is filed; an existing one gets it at once.
+    fun took(u: android.net.Uri) {
+        if (old != null) c.write { setAvatar(old.id, u) }
+        else { pendingUri = u; c.write { pending = photos.read(u, 600)?.asImageBitmap() } }
+    }
+    val camera = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.TakePicture()) { ok -> if (ok) shotUri?.let(::took) }
+    val gallery = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia()) { u -> if (u != null) took(u) }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).navigationBarsPadding()) {
         TopBar(stringResource(if (old == null) R.string.register_title else R.string.edit_specimen), over = stringResource(R.string.form_over), onBack = { nav.close() })
         Column(Modifier.padding(horizontal = 18.dp)) {
+            // The photo: tap the porthole.
+            Box(Modifier.fillMaxWidth().padding(bottom = 6.dp), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(132.dp).clip(CircleShape).border(1.dp, C.teal.copy(alpha = .6f), CircleShape).padding(6.dp).clip(CircleShape).background(C.screen)
+                    .clickable { choosing = true }, contentAlignment = Alignment.Center) {
+                    val pv = pending
+                    when {
+                        pv != null -> androidx.compose.foundation.Image(pv, null, Modifier.fillMaxSize(), contentScale = androidx.compose.ui.layout.ContentScale.Crop)
+                        old != null && old.portrait != 0L -> app.specimen.ui.components.ShotPic(old.portrait, Modifier.fillMaxSize(), stamp = if (old.portrait < 0) old.updated else 0)
+                        else -> Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Outlined.AddAPhoto, null, tint = C.tealText, modifier = Modifier.size(30.dp))
+                            Text(stringResource(R.string.avatar_add), style = T.Tiny.copy(color = C.tealText), modifier = Modifier.padding(top = 6.dp))
+                        }
+                    }
+                }
+            }
             Label(stringResource(R.string.f_planet), top = 4.dp)
             Planet.entries.chunked(3).forEach { row ->
                 Row(Modifier.fillMaxWidth().padding(bottom = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -144,6 +176,7 @@ fun SpecimenEdit(id: Long, lab: Lab, nav: Nav) {
                     c.write {
                         if (old == null) {
                             val newId = addSpecimen(Specimen(num = 0, name = name.trim(), planet = p.key, breed = b.key, sex = sex, born = born, arrived = arrived, neutered = neutered), catalog.startProtocols(b))
+                            pendingUri?.let { setAvatar(newId, it) }
                             nav.current = newId
                             nav.replace(Overlay.Dossier(newId))
                         } else {
@@ -169,6 +202,23 @@ fun SpecimenEdit(id: Long, lab: Lab, nav: Nav) {
                 picking = 0
             }) { Text(stringResource(R.string.ok)) }
         }, dismissButton = { TextButton({ picking = 0 }) { Text(stringResource(R.string.cancel)) } }) { DatePicker(state) }
+    }
+    if (choosing) Sheet(stringResource(R.string.avatar_title), { choosing = false }) {
+        Btn(stringResource(R.string.photo_camera), {
+            choosing = false
+            val f = java.io.File(c.photos.inbox, "avatar_${System.currentTimeMillis()}.jpg")
+            val u = androidx.core.content.FileProvider.getUriForFile(ctx, ctx.packageName + ".files", f)
+            shotUri = u
+            runCatching { camera.launch(u) }.onFailure { android.widget.Toast.makeText(ctx, R.string.no_camera, android.widget.Toast.LENGTH_LONG).show() }
+        }, Modifier.fillMaxWidth(), icon = androidx.compose.material.icons.Icons.Outlined.PhotoCamera)
+        Btn(stringResource(R.string.photo_gallery), {
+            choosing = false
+            runCatching { gallery.launch(androidx.activity.result.PickVisualMediaRequest(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+        }, Modifier.padding(top = 8.dp).fillMaxWidth(), kind = Kind.SOFT, icon = androidx.compose.material.icons.Icons.Outlined.PhotoLibrary)
+        if ((old != null && old.portrait < 0) || pending != null) Btn(stringResource(R.string.avatar_remove), {
+            choosing = false
+            if (old != null) c.write { dropAvatar(old.id) } else { pending = null; pendingUri = null }
+        }, Modifier.padding(top = 8.dp).fillMaxWidth(), kind = Kind.GHOST)
     }
     if (confirm && old != null) Sheet(stringResource(R.string.delete_specimen), { confirm = false }) {
         Text(stringResource(R.string.delete_specimen_b, old.name), style = T.Typed)

@@ -1,5 +1,6 @@
 package app.specimen.ui.settings
 
+import androidx.compose.material.icons.outlined.Devices
 import app.specimen.ui.Words
 import app.specimen.ui.components.RankBadge
 import app.specimen.ui.components.R8
@@ -169,6 +170,10 @@ fun SettingsPage(lab: Lab, nav: Nav) {
                 SetRow(Icons.Outlined.Language, stringResource(R.string.set_lang), langName) { sheet = "lang" }
                 SetRow(Icons.Outlined.Notifications, stringResource(R.string.set_remind), if (s.remind) "%d:00".format(s.hour) else stringResource(R.string.off_short)) { sheet = "remind" }
                 SetRow(Icons.Outlined.Info, stringResource(R.string.tips_again), null) { c.write { settings.update { it.copy(tips = emptySet(), tipsOff = false) } }; Toast.makeText(ctx, R.string.tips_back, Toast.LENGTH_SHORT).show() }
+            }
+            Group(stringResource(R.string.group_family)) {
+                SetRow(Icons.Outlined.Devices, stringResource(R.string.pair_title),
+                    if (s.paired) s.partnerName.ifBlank { stringResource(R.string.pair_on) } else stringResource(R.string.pair_off)) { nav.open(app.specimen.ui.Overlay.Pair) }
             }
             val gone = lab.specimens.filter { !it.here }
             if (gone.isNotEmpty()) Group(stringResource(R.string.missions_over)) {

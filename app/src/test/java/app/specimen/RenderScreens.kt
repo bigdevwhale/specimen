@@ -99,6 +99,7 @@ abstract class ScreensBase {
             Sc("d-protocols", Tab.STATION, Overlay.Protocols(cat)),
             Sc("e-settings", Tab.STATION, Overlay.Settings),
             Sc("f-lesson", Tab.COURSE, Overlay.Lesson("cat_body")),
+            Sc("h-pair", Tab.STATION, Overlay.Pair),
         )
         var which by mutableStateOf(list[0])
         rule.mainClock.autoAdvance = false

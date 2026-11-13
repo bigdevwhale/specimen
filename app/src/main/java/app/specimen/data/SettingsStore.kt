@@ -42,7 +42,22 @@ data class Settings(
     val spent: Int = 0,
     /** Experiments the ethics committee turned down (a badge, of sorts). */
     val refused: Int = 0,
-)
+    /** This phone, for the paired one; made once. */
+    val deviceId: String = "",
+    /** The shared secret from the pairing QR, base64; empty when not paired. */
+    val secret: String = "",
+    val partnerId: String = "",
+    val partnerName: String = "",
+    /** Keep in step in the background while at home. */
+    val hum: Boolean = false,
+    /** Networks where the two phones have met (gateway + subnet fingerprints), newest last. */
+    val homes: List<String> = emptyList(),
+    /** When the two phones last talked, epoch ms. */
+    val met: Long = 0,
+) {
+    val paired get() = secret.isNotEmpty() && partnerId.isNotEmpty()
+    val waiting get() = secret.isNotEmpty() && partnerId.isEmpty()
+}
 
 class SettingsStore(context: Context) {
     private val store = context.applicationContext.dataStore
@@ -67,9 +82,24 @@ class SettingsStore(context: Context) {
         skin = this[SKIN] ?: "typed",
         spent = this[SPENT] ?: 0,
         refused = this[REFUSED] ?: 0,
+        deviceId = this[DEVICE] ?: "",
+        secret = this[SECRET] ?: "",
+        partnerId = this[PARTNER] ?: "",
+        partnerName = this[PARTNER_NAME] ?: "",
+        hum = this[HUM] ?: false,
+        homes = this[HOMES]?.split('|')?.filter { it.isNotBlank() } ?: emptyList(),
+        met = this[MET] ?: 0L,
     )
 
     suspend fun now(): Settings = settings.first()
+
+    /** This phone's id for the paired one, made on first use. */
+    suspend fun deviceId(): String {
+        now().deviceId.takeIf { it.isNotEmpty() }?.let { return it }
+        val id = java.util.UUID.randomUUID().toString().replace("-", "").take(16)
+        update { it.copy(deviceId = id) }
+        return id
+    }
 
     suspend fun update(change: (Settings) -> Settings) {
         store.edit {
@@ -89,6 +119,13 @@ class SettingsStore(context: Context) {
             it[SKIN] = s.skin
             it[SPENT] = s.spent
             it[REFUSED] = s.refused
+            it[DEVICE] = s.deviceId
+            it[SECRET] = s.secret
+            it[PARTNER] = s.partnerId
+            it[PARTNER_NAME] = s.partnerName
+            it[HUM] = s.hum
+            it[HOMES] = s.homes.takeLast(4).joinToString("|")
+            it[MET] = s.met
         }
     }
 
@@ -108,5 +145,12 @@ class SettingsStore(context: Context) {
         val SKIN = stringPreferencesKey("skin")
         val SPENT = intPreferencesKey("spent")
         val REFUSED = intPreferencesKey("refused")
+        val DEVICE = stringPreferencesKey("device")
+        val SECRET = stringPreferencesKey("secret")
+        val PARTNER = stringPreferencesKey("partner")
+        val PARTNER_NAME = stringPreferencesKey("partner_name")
+        val HUM = booleanPreferencesKey("hum")
+        val HOMES = stringPreferencesKey("homes")
+        val MET = androidx.datastore.preferences.core.longPreferencesKey("met")
     }
 }

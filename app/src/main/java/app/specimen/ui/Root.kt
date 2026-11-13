@@ -96,6 +96,7 @@ sealed interface Overlay {
     data class Protocols(val specimen: Long) : Overlay
     data class Foods(val specimen: Long) : Overlay
     data object Settings : Overlay
+    data object Pair : Overlay
 }
 
 /** An observation sheet over whatever is open: [kind] is an [app.specimen.data.Ob] kind, 0 lets the researcher pick. */
@@ -164,6 +165,7 @@ fun StationRoot(s: Settings, tab: Tab = Tab.STATION, overlay: Overlay? = null, m
                 is Overlay.Protocols -> ProtocolsPage(o.specimen, lab, nav)
                 is Overlay.Foods -> FoodsPage(o.specimen, lab, nav)
                 Overlay.Settings -> SettingsPage(lab, nav)
+                Overlay.Pair -> app.specimen.ui.settings.PairPage(lab, nav)
             }
             StatusScrim()
         } }

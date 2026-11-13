@@ -119,6 +119,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.exifinterface)
+    // The QR that pairs two phones: drawn with zxing, scanned with its embedded scanner.
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.embedded)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)

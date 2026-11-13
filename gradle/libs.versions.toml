@@ -14,6 +14,8 @@ junit = "4.13.2"
 robolectric = "4.14.1"
 exif = "1.4.1"
 emoji2 = "1.5.0"
+zxing = "3.5.3"
+zxingEmbedded = "4.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +44,9 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 
 androidx-emoji2 = { group = "androidx.emoji2", name = "emoji2", version.ref = "emoji2" }
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exif" }
+
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+zxing-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingEmbedded" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

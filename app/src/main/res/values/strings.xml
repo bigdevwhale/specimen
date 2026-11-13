@@ -56,7 +56,7 @@
     <string name="welcome_body">An envoy from another planet lives in your home. It looks like an ordinary cat, dog or parrot – that is the disguise. The bureau asks you to observe it and keep it alive under Earth conditions.</string>
     <string name="welcome_sign">Director of the Bureau. Signature illegible.</string>
     <string name="welcome_go">Accept the appointment</string>
-    <string name="welcome_private">Everything stays on this phone: no accounts, no internet.</string>
+    <string name="welcome_private">Everything stays on your phones: no accounts, no servers.</string>
     <string name="station_title">Station</string>
     <string name="station_over">Specimens under observation: %1$d</string>
     <string name="grants_line">%1$s grants to spend · %2$s earned</string>
@@ -145,6 +145,38 @@
     <string name="skin_locked">%1$s · %2$s more needed</string>
     <string name="skins_short">Not enough grants yet: %1$s more. Keep observing!</string>
     <string name="add_specimen">Register another specimen</string>
+    <string name="avatar_add">Photo</string>
+    <string name="avatar_title">Portrait</string>
+    <string name="avatar_remove">Remove the photo</string>
+    <string name="group_family">Together</string>
+    <string name="pair_title">Second phone</string>
+    <string name="pair_on">Connected</string>
+    <string name="pair_off">Not connected</string>
+    <string name="pair_intro">Connect a second phone so the whole family keeps one diary: an entry or a photo made on one phone shows up on the other.</string>
+    <string name="pair_intro_b">On one phone tap «Show QR», on the other – «Scan QR». The phones need to be on the same Wi-Fi.</string>
+    <string name="pair_show">Show QR</string>
+    <string name="pair_scan">Scan QR</string>
+    <string name="pair_bad">That\'s not a Specimen code. Scan the QR from the other phone\'s «Second phone» page.</string>
+    <string name="pair_show_b">Open Settings → Second phone on the other phone, tap «Scan QR» and point it at this code.</string>
+    <string name="pair_waiting">Waiting for the second phone…</string>
+    <string name="pair_partner">Second phone</string>
+    <string name="pair_together">Connected: entries arrive at once</string>
+    <string name="pair_apart">Offline: they\'ll catch up when both phones are on the same Wi-Fi</string>
+    <string name="pair_met">Last time together: %1$s</string>
+    <string name="pair_received">Arrived from it: %1$d</string>
+    <string name="pair_how">The phones talk directly over your Wi-Fi, encrypted. No server and no account: nothing leaves the house.</string>
+    <string name="pair_hum">In the background at home</string>
+    <string name="pair_hum_b">Keep in step even with the app closed – only on the Wi-Fi where the phones have met.</string>
+    <string name="pair_awake">This phone may put the app to sleep in the background. Allow it to stay awake, or the entries will come only when you open the app.</string>
+    <string name="pair_awake_go">Allow</string>
+    <string name="pair_unpair">Disconnect</string>
+    <string name="pair_unpair_b">The phones stop syncing. Everything already here stays.</string>
+    <string name="pair_private_t">Privacy</string>
+    <string name="pair_private">The phones find each other only on your local network and talk directly, encrypted with a key from the QR. Nothing goes to the internet.</string>
+    <string name="link_channel">Second phone</string>
+    <string name="link_note_home">Keeping in step with the second phone</string>
+    <string name="link_note_away">Waiting for home Wi-Fi</string>
+    <string name="link_note_text">Entries from the other phone arrive by themselves</string>
     <string name="menu_title">File</string>
     <string name="menu_obs">Observation</string>
     <string name="menu_obs_b">mood, appetite, weight</string>
@@ -402,7 +434,7 @@
     <string name="restore_t">Restore from the backup?</string>
     <string name="restore_b">The station will be replaced by the backup and the app will restart.</string>
     <string name="privacy">Privacy</string>
-    <string name="privacy_text">The app has no internet access. Everything stays on this phone until you share a report or an extract yourself.</string>
+    <string name="privacy_text">Everything stays on this phone until you share a report or an extract yourself. The network is used only to talk to your second phone over the home Wi-Fi.</string>
     <string name="community" translatable="false">StillCraft</string>
     <string name="community_text">Specimen is one of the StillCraft apps. Write to us in Telegram.</string>
     <string name="community_bug">Report a bug</string>
@@ -704,9 +736,9 @@
     </string-array>
     <string-array name="tip_station">
         <item>The station</item>
-        <item>A folder per specimen. The four buttons under the card log the most common things in a tap.</item>
-        <item>Life support due soon is below: tick it when done.</item>
-        <item>Integrity drops when protocols are overdue. Nothing terrible happens – the bureau just frowns.</item>
+        <item>The four buttons under the portrait log the most common things in a tap. Tap the portrait to open the file.</item>
+        <item>«Today» holds only what needs doing now: tick it when done.</item>
+        <item>Add another pet with the «+» next to the name at the top.</item>
     </string-array>
     <string-array name="tip_atlas">
         <item>The behaviour atlas</item>

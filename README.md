@@ -24,6 +24,7 @@ Your cat, dog or parrot is an envoy from another world, and you are the xenologi
 - **The behaviour atlas.** 200 poses and habits – belly up, the loaf, the slow blink, the box nap. Tag one on a photo and it opens in the atlas with what it really means.
 - **A report every Sunday.** A typed sheet with your photos and their captions, the behavioural profile, weight and conclusions like «The creature displays friendliness». Share it as a picture.
 - **The xenology course.** 45 short lessons on body language, stress, play and food, each with a task to do with your own pet and one question. Observations and lessons earn grants, and your rank climbs from laboratory assistant to academician.
+- **Together.** Connect a second phone with a QR and the whole family keeps one diary: entries, photos and portraits arrive on the other phone by themselves while both are on the home Wi-Fi.
 - **An extract for the vet.** A PDF with weight, vaccines, medicines and reactions, two months of symptoms and the foods that didn't agree.
 - **Light and dark themes**, styled as an old star atlas: engraved planets, rank medals and animal portraits.
 
@@ -33,7 +34,7 @@ Download [Specimen.apk](https://github.com/bigdevwhale/specimen/releases/latest/
 
 ## Privacy
 
-No ads, no account, no analytics. The app needs no internet: everything stays on your phone. See [PRIVACY.md](PRIVACY.md).
+No ads, no account, no analytics. Everything stays on your phone. The network is used only to reach your second phone: the two find each other on the home Wi-Fi and talk directly, encrypted, with no server. See [PRIVACY.md](PRIVACY.md).
 
 ## License
 

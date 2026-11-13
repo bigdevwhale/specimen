@@ -56,7 +56,7 @@
     <string name="welcome_body">В вашем доме живёт посланник другой планеты. Он выглядит как обычная кошка, собака или попугай – это маскировка. Бюро поручает вам наблюдать за ним и поддерживать его жизнь в земных условиях.</string>
     <string name="welcome_sign">Директор Бюро. Подпись неразборчива.</string>
     <string name="welcome_go">Принять назначение</string>
-    <string name="welcome_private">Всё хранится только на этом телефоне: без аккаунтов и без интернета.</string>
+    <string name="welcome_private">Всё хранится на ваших телефонах: без аккаунтов и серверов.</string>
     <string name="station_title">Станция</string>
     <string name="station_over">Под наблюдением: %1$d</string>
     <string name="grants_line">%1$s грантов на счету · всего %2$s</string>
@@ -145,6 +145,38 @@
     <string name="skin_locked">%1$s · не хватает %2$s</string>
     <string name="skins_short">Пока не хватает: ещё %1$s. Продолжайте наблюдения!</string>
     <string name="add_specimen">Зарегистрировать ещё образец</string>
+    <string name="avatar_add">Фото</string>
+    <string name="avatar_title">Портрет</string>
+    <string name="avatar_remove">Убрать фото</string>
+    <string name="group_family">Вдвоём</string>
+    <string name="pair_title">Второй телефон</string>
+    <string name="pair_on">Подключён</string>
+    <string name="pair_off">Не подключён</string>
+    <string name="pair_intro">Подключите второй телефон, чтобы вся семья вела один дневник: запись или фото, сделанные на одном телефоне, появятся и на другом.</string>
+    <string name="pair_intro_b">На одном телефоне нажмите «Показать QR», на другом – «Сканировать QR». Телефоны должны быть в одной Wi-Fi.</string>
+    <string name="pair_show">Показать QR</string>
+    <string name="pair_scan">Сканировать QR</string>
+    <string name="pair_bad">Это не код «Контакта». Отсканируйте QR со страницы «Второй телефон» на другом телефоне.</string>
+    <string name="pair_show_b">На другом телефоне откройте «Настройки → Второй телефон», нажмите «Сканировать QR» и наведите камеру на этот код.</string>
+    <string name="pair_waiting">Ждём второй телефон…</string>
+    <string name="pair_partner">Второй телефон</string>
+    <string name="pair_together">Связь есть: записи приходят сразу</string>
+    <string name="pair_apart">Не в сети: всё подтянется, когда оба телефона окажутся в одной Wi-Fi</string>
+    <string name="pair_met">Последний раз на связи: %1$s</string>
+    <string name="pair_received">Пришло с него: %1$d</string>
+    <string name="pair_how">Телефоны связываются напрямую через вашу Wi-Fi, в зашифрованном виде. Без сервера и аккаунта: ничего не уходит из дома.</string>
+    <string name="pair_hum">В фоне, когда вы дома</string>
+    <string name="pair_hum_b">Синхронизировать даже с закрытым приложением – только в той Wi-Fi, где телефоны уже встречались.</string>
+    <string name="pair_awake">Этот телефон может усыплять приложение в фоне. Разрешите ему работать, иначе записи будут приходить, только когда вы откроете приложение.</string>
+    <string name="pair_awake_go">Разрешить</string>
+    <string name="pair_unpair">Отключить</string>
+    <string name="pair_unpair_b">Телефоны перестанут синхронизироваться. Всё, что уже есть на этом телефоне, останется.</string>
+    <string name="pair_private_t">Приватность</string>
+    <string name="pair_private">Телефоны находят друг друга только в вашей домашней сети и общаются напрямую, шифруя всё ключом из QR. В интернет ничего не уходит.</string>
+    <string name="link_channel">Второй телефон</string>
+    <string name="link_note_home">Синхронизация со вторым телефоном</string>
+    <string name="link_note_away">Ждём домашнюю Wi-Fi</string>
+    <string name="link_note_text">Записи со второго телефона придут сами</string>
     <string name="menu_title">Записать</string>
     <string name="menu_obs">Наблюдение</string>
     <string name="menu_obs_b">состояние, аппетит, вес</string>
@@ -400,7 +432,7 @@
     <string name="restore_t">Восстановить из копии?</string>
     <string name="restore_b">Станция заменится содержимым копии, приложение перезапустится.</string>
     <string name="privacy">Приватность</string>
-    <string name="privacy_text">У приложения нет доступа в интернет. Всё остаётся на телефоне, пока вы сами не отправите отчёт или выписку.</string>
+    <string name="privacy_text">Всё остаётся на телефоне, пока вы сами не отправите отчёт или выписку. Сеть нужна только для связи со вторым телефоном через домашнюю Wi-Fi.</string>
     <string name="community_text">«Контакт» – одно из приложений StillCraft. Пишите нам в Telegram.</string>
     <string name="community_bug">Сообщить об ошибке</string>
     <string name="community_bug_sub">что-то сломалось или выглядит не так</string>
@@ -715,9 +747,9 @@
     </string-array>
     <string-array name="tip_station">
         <item>Станция</item>
-        <item>У каждого образца своя папка. Четыре кнопки под карточкой записывают самое частое в одно касание.</item>
-        <item>Ниже – процедуры, срок которых подходит. Отметьте галочкой, когда сделаете.</item>
-        <item>Целостность падает, если процедуры просрочены. Ничего страшного не случится – бюро просто нахмурится.</item>
+        <item>Четыре кнопки под портретом записывают самое частое в одно касание. Нажмите на портрет – откроется досье.</item>
+        <item>В «Сегодня» – только то, что нужно сделать сейчас. Отметьте галочкой, когда сделаете.</item>
+        <item>Ещё одного питомца можно добавить кнопкой «+» рядом с именем вверху.</item>
     </string-array>
     <string-array name="tip_atlas">
         <item>Атлас поведения</item>

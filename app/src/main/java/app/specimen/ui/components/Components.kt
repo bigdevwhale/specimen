@@ -211,7 +211,7 @@ fun Portrait(sp: Specimen, size: Dp = 56.dp, mood: Mood = Mood.CALM, glow: Boole
     val gap = if (glow) 6.dp else (size.value * 0.04f).coerceIn(1.5f, 4f).dp
     Box(Modifier.size(size).border(1.dp, C.teal.copy(alpha = if (glow) .7f else .5f), androidx.compose.foundation.shape.CircleShape).padding(gap)
         .clip(androidx.compose.foundation.shape.CircleShape).background(C.screen), contentAlignment = Alignment.Center) {
-        if (sp.portrait != 0L) ShotPic(sp.portrait, Modifier.fillMaxSize())
+        if (sp.portrait != 0L) ShotPic(sp.portrait, Modifier.fillMaxSize(), stamp = if (sp.portrait < 0) sp.updated else 0)
         else Bust(planet, Modifier.size(size * 0.86f).padding(top = size * 0.08f))
     }
 }
