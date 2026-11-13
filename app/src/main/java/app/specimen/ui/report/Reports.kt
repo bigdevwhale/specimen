@@ -305,7 +305,7 @@ private fun Document(r: Report, lab: Lab) {
                         }
                         Box(Modifier.weight(1f)) {
                             Polaroid(p.shot.id, Words.date(ctx, p.shot.day) + ". " + cap, Modifier.fillMaxWidth(), angle = if ((row + i) % 2 == 0) -1.6f else 1.4f)
-                            if (p.first) Stamp(stringResource(R.string.stamp_new_skill), Modifier.align(Alignment.TopEnd).padding(top = 98.dp, end = 4.dp).background(Color(0xCCFDFBF6)), color = s.accent.takeIf { lab.s.skin != "blueprint" } ?: Color(0xFFB8432F), angle = -9f, size = 10f)
+                            if (p.first) Stamp(stringResource(R.string.stamp_new_skill), Modifier.align(Alignment.TopEnd).padding(top = 98.dp, end = 8.dp), fill = Color(0xE6FDFBF6), color = s.accent.takeIf { lab.s.skin != "blueprint" } ?: Color(0xFFB8432F), angle = -9f, size = 10f)
                         }
                     }
                     if (pair.size == 1) Spacer(Modifier.weight(1f))

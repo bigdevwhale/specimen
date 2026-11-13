@@ -223,7 +223,7 @@ fun ShotPage(id: Long, lab: Lab, nav: Nav) {
         }
         Box(Modifier.padding(horizontal = 18.dp)) {
             ShotPic(shot.id, Modifier.fillMaxWidth().heightIn(min = 240.dp).aspectRatio(0.9f).clip(R8), big = true, stamp = shot.updated)
-            if (first.isNotEmpty()) Stamp(stringResource(R.string.stamp_new_skill), Modifier.align(Alignment.BottomEnd).padding(14.dp).background(C.sheet.copy(alpha = .85f)), angle = -8f, size = 15f)
+            if (first.isNotEmpty()) Stamp(stringResource(R.string.stamp_new_skill), Modifier.align(Alignment.BottomEnd).padding(end = 22.dp, bottom = 22.dp), angle = -6f, size = 14f, fill = C.sheet.copy(alpha = .9f))
         }
         Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             shot.tagList.mapNotNull { lab.cat.behaviour(it) }.forEach { b ->

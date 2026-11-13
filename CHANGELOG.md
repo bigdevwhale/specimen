@@ -6,6 +6,12 @@ line "<!-- tg", then 2-4 short lines in Russian for users (what is new, what is 
 then close it like any HTML comment. The release notes carry it, and the chat bot posts those lines.
 -->
 
+## [1.1.1] - 2026-11-13
+
+- Fixed: the «New skill» stamp on a photo had its light backing drawn unturned, so the letters ran past it. The backing now turns with the stamp, on the photo page and in the report.
+
+<!-- tg skip -->
+
 ## [1.1.0] - 2026-11-13
 
 - A second phone: pair two phones with a QR (Settings → Second phone) and keep one diary for the whole family. They find each other on the home Wi-Fi and swap entries, photos and portraits directly, encrypted, with no server; optionally in the background at home.

@@ -99,9 +99,10 @@ fun Paper(modifier: Modifier = Modifier, pad: Dp = 14.dp, color: Color = C.paper
 
 /** A rubber stamp: red capitals in a frame, slightly askew. */
 @Composable
-fun Stamp(text: String, modifier: Modifier = Modifier, color: Color = C.stamp, angle: Float = -6f, size: Float = 13f) {
-    Text(text.uppercase(), style = T.Tab.copy(color = color, fontSize = size.sp, letterSpacing = 1.5.sp), maxLines = 1,
-        modifier = modifier.rotate(angle).border(2.dp, color.copy(alpha = .9f), R8).padding(horizontal = 9.dp, vertical = 3.dp))
+fun Stamp(text: String, modifier: Modifier = Modifier, color: Color = C.stamp, angle: Float = -6f, size: Float = 13f, fill: Color = Color.Transparent) {
+    // The fill turns with the frame, so the letters never spill past it.
+    Text(text.uppercase(), style = T.Tab.copy(color = color, fontSize = size.sp, letterSpacing = 1.5.sp), maxLines = 1, softWrap = false,
+        modifier = modifier.rotate(angle).clip(R8).background(fill).border(2.dp, color.copy(alpha = .9f), R8).padding(horizontal = 10.dp, vertical = 4.dp))
 }
 
 /** Small typed capitals: a folder tab or the head of a section. */
